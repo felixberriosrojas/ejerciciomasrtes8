@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
-
+from usuario import Usuario
 app = Flask(__name__, template_folder='template', static_folder='static')
-registros = []
 
 @app.route('/')
 def index():
@@ -15,12 +14,14 @@ def registro():
             'apellido': request.form.get('apellido'),
             'edad': request.form.get('edad')
         }
-        registros.append(usuario_registrado)
+        Usuario.save(usuario_registrado)
+
         return redirect(url_for('lista'))
     return render_template('registro.html')
 
 @app.route('/lista')
 def lista():
+    registros = Usuario.get_all()
     return render_template('lista.html', registros=registros)
 
 if __name__ == '__main__':
